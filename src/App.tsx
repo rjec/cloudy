@@ -10,11 +10,12 @@ import {
   ChevronDown, Server, Cpu, Network,
   Lock, Heart, Lightbulb, MessageSquareQuote, Check,
   ArrowUp, ArrowDown, Mail, XCircle, CheckCircle, 
-  Briefcase, FlaskConical, DollarSign, BarChart3, Layers
+  Briefcase, FlaskConical, DollarSign, BarChart3, Layers,
+  HardDrive, CloudRain, Boxes, Building2
 } from 'lucide-react';
 
 const easeOutExpo = [0.16, 1, 0.3, 1];
-const TOTAL_SLIDES = 8;
+const TOTAL_SLIDES = 9;
 
 const Slide1 = () => {
   return (
@@ -157,6 +158,133 @@ const ArchitectureDiagram = () => {
         <span className="text-xs text-slate-500 mt-1 text-center">LLM Grounding & Analytics</span>
       </motion.div>
 
+    </div>
+  );
+};
+
+const SlideHistory = () => {
+  const [activeEra, setActiveEra] = useState(0);
+
+  const eras = [
+    {
+      year: "1990s",
+      title: "The Server Room",
+      desc: "Physical control. Racks of hardware in the basement. Secure, but impossible to scale dynamically.",
+      example: "Consider an apartment complex owner: Property management meant a desktop PC in the back office. Rent rolls lived in filing cabinets. If the hard drive crashed, you lost the tenant history. Data was local, vulnerable, and isolated.",
+      icon: HardDrive,
+      color: "text-slate-400",
+      bgBorder: "border-slate-600"
+    },
+    {
+      year: "2000s",
+      title: "The Great Migration",
+      desc: "We rented servers. We traded control for convenience and scale. Someone else owned the core infrastructure.",
+      example: "Early web portals emerged. You uploaded tenant data to an external server. You gained remote access, but the vendor controlled the schema, security, and updates.",
+      icon: CloudRain,
+      color: "text-blue-400",
+      bgBorder: "border-blue-500/50"
+    },
+    {
+      year: "2010s",
+      title: "SaaS Fragmentation",
+      desc: "An app for everything. Data shattered across 100 different vendors, subscriptions, and silos.",
+      example: "You use AppFolio for leasing, QuickBooks for accounting, and a separate app for maintenance. Data is trapped in walled gardens; you can't easily cross-reference maintenance costs against long-term tenant rent growth.",
+      icon: Boxes,
+      color: "text-rose-400",
+      bgBorder: "border-rose-500/50"
+    },
+    {
+      year: "Today",
+      title: "Sovereign Intelligence",
+      desc: "Full circle. You own the architecture on MSFT/GCP, but at infinite scale. Unified, AI-native, and fully yours.",
+      example: "A global Azure or Google Cloud data lake unifies all property operations. You own the lake. An AI agent instantly predicts HVAC failures based on 20 years of bespoke maintenance logs and lease expirations.",
+      icon: Database,
+      color: "text-emerald-400",
+      bgBorder: "border-emerald-500/50"
+    }
+  ];
+
+  return (
+    <div id="slide-history" className="relative min-h-[100dvh] w-full snap-start flex flex-col justify-center p-6 sm:p-12 overflow-hidden bg-[#0A0F1C]">
+      <div className="absolute top-1/4 right-0 w-[60vw] h-[60vw] bg-indigo-900/10 blur-[120px] rounded-full pointer-events-none" />
+      
+      <div className="relative z-10 max-w-6xl mx-auto w-full pt-16 md:pt-0">
+        <motion.div
+           initial={{ opacity: 0, y: 30 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           exit={{ opacity: 0, y: -30 }}
+           viewport={{ once: false, amount: 0.3 }}
+           transition={{ duration: 0.6, ease: easeOutExpo }}
+           className="text-center mb-8 md:mb-16"
+        >
+          <div className="inline-flex items-center gap-2 text-indigo-400 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-4 border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 rounded-full">
+            The Evolution of Control
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-6">From Racks to Sovereign Lakes.</h2>
+          <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed px-4">
+            A 30-year journey of losing control to gain scale, and finally getting it all back.
+          </p>
+        </motion.div>
+
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center">
+          {/* Era Selector (Horizontal on mobile, vertical on desktop) */}
+          <div className="flex w-full lg:w-auto overflow-x-auto lg:overflow-visible lg:flex-col gap-4 hide-scrollbar pb-4 lg:pb-0 px-2 snap-x snap-mandatory">
+            {eras.map((era, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setActiveEra(idx)}
+                className={`snap-center shrink-0 w-[240px] lg:w-[280px] text-left p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden group ${activeEra === idx ? 'bg-slate-800/80 ' + era.bgBorder + ' shadow-[0_0_20px_rgba(0,0,0,0.3)]' : 'bg-slate-900/40 border-slate-800 hover:border-slate-700 opacity-60 hover:opacity-100'}`}
+              >
+                {activeEra === idx && (
+                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                )}
+                <div className="flex items-center justify-between mb-2">
+                   <div className="text-xs font-bold tracking-widest uppercase text-slate-500">{era.year}</div>
+                   {(() => {
+                        const Icon = era.icon;
+                        return <Icon size={18} className={activeEra === idx ? era.color : "text-slate-600"} />;
+                   })()}
+                </div>
+                <div className={`font-display font-semibold sm:text-lg transition-colors ${activeEra === idx ? 'text-white' : 'text-slate-400'}`}>{era.title}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Active Era Display */}
+          <div className="flex-1 w-full min-h-[280px] sm:min-h-[320px] relative mt-4 lg:mt-0">
+             <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeEra}
+                  initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="absolute inset-0 bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 sm:p-12 flex flex-col justify-center items-center text-center backdrop-blur-md overflow-hidden"
+                >
+                  <div className={`absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] ${eras[activeEra].color.replace('text-', 'from-')} via-transparent to-transparent pointer-events-none`} />
+                  
+                  <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center mb-6 bg-slate-900/80 border ${eras[activeEra].bgBorder} relative z-10 shadow-xl`}>
+                    {(() => {
+                        const Icon = eras[activeEra].icon;
+                        return <Icon size={48} className={eras[activeEra].color} strokeWidth={1.5} />;
+                    })()}
+                  </div>
+                  <h3 className="text-2xl sm:text-4xl font-display font-bold text-white mb-4 relative z-10">{eras[activeEra].title}</h3>
+                  <p className="text-base sm:text-lg text-slate-300 max-w-lg leading-relaxed relative z-10 mb-6">{eras[activeEra].desc}</p>
+                  
+                  <div className="bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl w-full max-w-xl relative z-10 text-left shadow-lg">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-2">
+                      <Building2 size={14} className="text-indigo-400" /> Real Estate Example
+                    </div>
+                    <div className="text-slate-300 text-sm leading-relaxed">
+                      {eras[activeEra].example}
+                    </div>
+                  </div>
+                </motion.div>
+             </AnimatePresence>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -613,42 +741,53 @@ const Slide4 = () => {
 
 const Navigation = ({ activeIndex, onNavigate }: { activeIndex: number, onNavigate: (index: number) => void }) => {
   return (
-    <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-3 pointer-events-auto">
-      <button 
-        onClick={() => onNavigate(Math.max(0, activeIndex - 1))}
-        className={`p-2 rounded-full transition-all ${activeIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100 hover:bg-white/10'}`}
-        aria-label="Previous slide"
-      >
-        <ArrowUp size={20} className="text-white" />
-      </button>
-      
-      <div className="flex flex-col gap-2 my-2">
-        {Array.from({ length: TOTAL_SLIDES }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => onNavigate(index)}
-            className="w-8 h-8 flex items-center justify-center group"
-            aria-label={`Go to slide ${index + 1}`}
-          >
-            <div 
-              className={`rounded-full transition-all duration-300 ${
-                activeIndex === index 
-                ? 'w-2.5 h-2.5 bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]' 
-                : 'w-1.5 h-1.5 bg-white/30 group-hover:bg-white/60 group-hover:scale-150'
-              }`} 
-            />
-          </button>
-        ))}
+    <>
+      <div className="hidden md:flex fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 flex-col items-center gap-3 pointer-events-auto">
+        <button 
+          onClick={() => onNavigate(Math.max(0, activeIndex - 1))}
+          className={`p-2 rounded-full transition-all ${activeIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100 hover:bg-white/10'}`}
+          aria-label="Previous slide"
+        >
+          <ArrowUp size={20} className="text-white" />
+        </button>
+        
+        <div className="flex flex-col gap-2 my-2">
+          {Array.from({ length: TOTAL_SLIDES }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => onNavigate(index)}
+              className="w-8 h-8 flex items-center justify-center group"
+              aria-label={`Go to slide ${index + 1}`}
+            >
+              <div 
+                className={`rounded-full transition-all duration-300 ${
+                  activeIndex === index 
+                  ? 'w-2.5 h-2.5 bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]' 
+                  : 'w-1.5 h-1.5 bg-white/30 group-hover:bg-white/60 group-hover:scale-150'
+                }`} 
+              />
+            </button>
+          ))}
+        </div>
+
+        <button 
+          onClick={() => onNavigate(Math.min(TOTAL_SLIDES - 1, activeIndex + 1))}
+          className={`p-2 rounded-full transition-all ${activeIndex === TOTAL_SLIDES - 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100 hover:bg-white/10'}`}
+          aria-label="Next slide"
+        >
+          <ArrowDown size={20} className="text-white" />
+        </button>
       </div>
 
-      <button 
-        onClick={() => onNavigate(Math.min(TOTAL_SLIDES - 1, activeIndex + 1))}
-        className={`p-2 rounded-full transition-all ${activeIndex === TOTAL_SLIDES - 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100 hover:bg-white/10'}`}
-        aria-label="Next slide"
-      >
-        <ArrowDown size={20} className="text-white" />
-      </button>
-    </div>
+      <div className="md:hidden fixed top-0 left-0 w-full h-[3px] bg-slate-800 z-50">
+         <motion.div 
+           className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+           initial={{ width: 0 }}
+           animate={{ width: `${(activeIndex / (TOTAL_SLIDES - 1)) * 100}%` }}
+           transition={{ duration: 0.3 }}
+         />
+      </div>
+    </>
   );
 };
 
@@ -718,8 +857,8 @@ export default function App() {
       className="h-[100dvh] w-full overflow-y-scroll snap-y snap-mandatory bg-slate-950 text-slate-50 hide-scrollbar scroll-smooth relative"
     >
       <Navigation activeIndex={activeIndex} onNavigate={handleNavigate} />
-
       <Slide1 />
+      <SlideHistory />
       <Slide2 />
       <Slide2_5 />
       <SlideEmailIsDead />
@@ -751,7 +890,7 @@ export default function App() {
       </div>
 
       {/* Modern Floating Action Bar */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+      <div className="fixed bottom-6 pb-[env(safe-area-inset-bottom)] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
         <motion.div 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
