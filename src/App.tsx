@@ -11,7 +11,7 @@ import {
   Lock, Heart, Lightbulb, MessageSquareQuote, Check,
   ArrowUp, ArrowDown, Mail, XCircle, CheckCircle, 
   Briefcase, FlaskConical, DollarSign, BarChart3, Layers,
-  HardDrive, CloudRain, Boxes, Building2
+  HardDrive, CloudRain, Boxes, Building2, MapPin
 } from 'lucide-react';
 
 const easeOutExpo = [0.16, 1, 0.3, 1];
@@ -167,37 +167,53 @@ const SlideHistory = () => {
 
   const eras = [
     {
-      year: "1990s",
-      title: "The Server Room",
-      desc: "Physical control. Racks of hardware in the basement. Secure, but impossible to scale dynamically.",
-      example: "Consider an apartment complex owner: Property management meant a desktop PC in the back office. Rent rolls lived in filing cabinets. If the hard drive crashed, you lost the tenant history. Data was local, vulnerable, and isolated.",
+      year: "Pre-2005",
+      title: "The Local Era",
+      desc: "Physical control. Racks of hardware or filing cabinets. Secure, but impossible to scale dynamically.",
+      airbnb: "Paper ledgers + Excel on laptop. Bookings via phone/email (Hotmail/Yahoo).",
+      apartment: "Paper leases in filing cabinets. Access databases on office PC.",
+      storage: "Local hard drive. Physical filing cabinets. On-site server.",
+      flow: "Sneaker-net (USB/CD), fax, physical mail, early email.",
+      control: "Full local control. Data loss risk (hardware failure). No real-time collaboration. High control, low convenience.",
       icon: HardDrive,
       color: "text-slate-400",
       bgBorder: "border-slate-600"
     },
     {
-      year: "2000s",
-      title: "The Great Migration",
-      desc: "We rented servers. We traded control for convenience and scale. Someone else owned the core infrastructure.",
-      example: "Early web portals emerged. You uploaded tenant data to an external server. You gained remote access, but the vendor controlled the schema, security, and updates.",
+      year: "2006–2012",
+      title: "Early Cloud Transition",
+      desc: "We rented servers. We traded control for convenience and scale.",
+      airbnb: "Gmail + Google Calendar. Early Google Docs/Sheets.",
+      apartment: "Exchange/Outlook. On-prem SharePoint or early Office 365.",
+      storage: "Mix: Local PC + vendor data centers. Google Drive/Dropbox buckets.",
+      flow: "Email threads + attachments. Shared folders/links. Manual uploads.",
+      control: "Shifting. Vendor manages underlying storage. Convenience gain (access anywhere), but vendor lock-in begins.",
       icon: CloudRain,
       color: "text-blue-400",
       bgBorder: "border-blue-500/50"
     },
     {
-      year: "2010s",
-      title: "SaaS Fragmentation",
-      desc: "An app for everything. Data shattered across 100 different vendors, subscriptions, and silos.",
-      example: "You use AppFolio for leasing, QuickBooks for accounting, and a separate app for maintenance. Data is trapped in walled gardens; you can't easily cross-reference maintenance costs against long-term tenant rent growth.",
+      year: "2013–2019",
+      title: "Mobile & Collab Boom",
+      desc: "Real-time synced documents. APIs integrate tools. Mobile apps explode.",
+      airbnb: "Google Workspace adoption. Real-time Docs. Zapier integrations.",
+      apartment: "Microsoft 365 rollout. OneDrive + Teams (2017+). Cloud PMS.",
+      storage: "Primarily in Google Cloud or Azure. Starting global replication.",
+      flow: "Real-time synced docs + links. API flows between tools. Mobile apps.",
+      control: "Mostly vendor-controlled. Huge scale, but data sprawl. Compliance harder to audit.",
       icon: Boxes,
       color: "text-rose-400",
       bgBorder: "border-rose-500/50"
     },
     {
-      year: "Today",
-      title: "Sovereign Intelligence",
-      desc: "Full circle. You own the architecture on MSFT/GCP, but at infinite scale. Unified, AI-native, and fully yours.",
-      example: "A global Azure or Google Cloud data lake unifies all property operations. You own the lake. An AI agent instantly predicts HVAC failures based on 20 years of bespoke maintenance logs and lease expirations.",
+      year: "2020–2026",
+      title: "Hyperscale + AI Era",
+      desc: "Global major clouds. Intelligent orchestration. But abstracted control.",
+      airbnb: "Google Workspace + Gemini. Dynamic pricing, cloud-native.",
+      apartment: "Microsoft 365 + Copilot + Power Platform. Integrated PMS.",
+      storage: "Global major clouds (Google Cloud worldwide, Azure global footprint). Multi-tenant.",
+      flow: "Automated workflows, AI summaries, instant portals, API ecosystems.",
+      control: "Abstracted global control. Extreme scale and AI. But massive vendor dependency and data sovereignty concerns.",
       icon: Database,
       color: "text-emerald-400",
       bgBorder: "border-emerald-500/50"
@@ -227,7 +243,7 @@ const SlideHistory = () => {
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center">
-          {/* Era Selector (Horizontal on mobile, vertical on desktop) */}
+          {/* Era Selector */}
           <div className="flex w-full lg:w-auto overflow-x-auto lg:overflow-visible lg:flex-col gap-4 hide-scrollbar pb-4 lg:pb-0 px-2 snap-x snap-mandatory">
             {eras.map((era, idx) => (
               <button 
@@ -251,7 +267,7 @@ const SlideHistory = () => {
           </div>
 
           {/* Active Era Display */}
-          <div className="flex-1 w-full min-h-[280px] sm:min-h-[320px] relative mt-4 lg:mt-0">
+          <div className="flex-1 w-full min-h-[500px] relative mt-4 lg:mt-0">
              <AnimatePresence mode="wait">
                 <motion.div
                   key={activeEra}
@@ -259,25 +275,44 @@ const SlideHistory = () => {
                   animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
                   exit={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="absolute inset-0 bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 sm:p-12 flex flex-col justify-center items-center text-center backdrop-blur-md overflow-hidden"
+                  className="absolute inset-0 bg-slate-800/40 border border-slate-700/50 rounded-3xl p-6 sm:p-10 flex flex-col justify-center items-center text-center backdrop-blur-md overflow-hidden"
                 >
                   <div className={`absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] ${eras[activeEra].color.replace('text-', 'from-')} via-transparent to-transparent pointer-events-none`} />
                   
-                  <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center mb-6 bg-slate-900/80 border ${eras[activeEra].bgBorder} relative z-10 shadow-xl`}>
-                    {(() => {
-                        const Icon = eras[activeEra].icon;
-                        return <Icon size={48} className={eras[activeEra].color} strokeWidth={1.5} />;
-                    })()}
-                  </div>
-                  <h3 className="text-2xl sm:text-4xl font-display font-bold text-white mb-4 relative z-10">{eras[activeEra].title}</h3>
-                  <p className="text-base sm:text-lg text-slate-300 max-w-lg leading-relaxed relative z-10 mb-6">{eras[activeEra].desc}</p>
-                  
-                  <div className="bg-slate-900/80 border border-slate-700/50 p-5 rounded-2xl w-full max-w-xl relative z-10 text-left shadow-lg">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-2">
-                      <Building2 size={14} className="text-indigo-400" /> Real Estate Example
+                  <div className="w-full flex-1 flex flex-col justify-center items-center">
+                    <h3 className="text-2xl sm:text-3xl font-display font-bold text-white mb-2 relative z-10">{eras[activeEra].title}</h3>
+                    <p className="text-base text-slate-300 max-w-lg leading-relaxed relative z-10 mb-6">{eras[activeEra].desc}</p>
+                    
+                    {/* Personas */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full text-left relative z-10 mb-6">
+                      <div className="bg-slate-900/60 border border-slate-700/50 p-4 rounded-xl shadow-md">
+                        <div className="text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                          <MapPin size={12} /> Airbnb Host (Google)
+                        </div>
+                        <div className="text-slate-300 text-sm leading-relaxed">{eras[activeEra].airbnb}</div>
+                      </div>
+                      <div className="bg-slate-900/60 border border-slate-700/50 p-4 rounded-xl shadow-md">
+                        <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                          <Building2 size={12} /> Apartment Owner (MSFT)
+                        </div>
+                        <div className="text-slate-300 text-sm leading-relaxed">{eras[activeEra].apartment}</div>
+                      </div>
                     </div>
-                    <div className="text-slate-300 text-sm leading-relaxed">
-                      {eras[activeEra].example}
+                    
+                    {/* Infra Attributes */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full text-left relative z-10 border-t border-slate-700/50 pt-6">
+                      <div>
+                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Database size={12} /> Storage</div>
+                        <div className="text-slate-400 text-xs leading-relaxed">{eras[activeEra].storage}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Network size={12} /> Flow</div>
+                        <div className="text-slate-400 text-xs leading-relaxed">{eras[activeEra].flow}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Shield size={12} /> Control & Trade-offs</div>
+                        <div className="text-slate-400 text-xs leading-relaxed">{eras[activeEra].control}</div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
