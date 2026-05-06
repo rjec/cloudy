@@ -1,0 +1,6 @@
+{
+  "name": "Slides App",
+  "description": "An app processing a Google Slides presentation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
