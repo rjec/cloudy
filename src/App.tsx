@@ -1,960 +1,552 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Cloud, Database, Shield, Zap, 
-  ChevronDown, Server, Cpu, Network,
-  Lock, Heart, Lightbulb, MessageSquareQuote, Check,
-  ArrowUp, ArrowDown, Mail, XCircle, CheckCircle, 
-  Briefcase, FlaskConical, DollarSign, BarChart3, Layers,
-  HardDrive, CloudRain, Boxes, Building2, MapPin
+import { FormEvent, useMemo, useState } from 'react';
+import {
+  AlertTriangle,
+  Building2,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardList,
+  Clock,
+  FileText,
+  Headphones,
+  LifeBuoy,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Phone,
+  RefreshCw,
+  Send,
+  ShieldCheck,
+  User,
+  Users,
+  Zap,
 } from 'lucide-react';
 
-const easeOutExpo = [0.16, 1, 0.3, 1];
-const TOTAL_SLIDES = 9;
+type Priority = 'critical' | 'urgent' | 'standard' | 'planning';
 
-const Slide1 = () => {
-  return (
-    <div id="slide-1" className="relative min-h-[100dvh] w-full snap-start flex flex-col items-center justify-center p-6 sm:p-12 overflow-hidden bg-slate-950">
-      {/* Background Orbs */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 1 }}
-        className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-600/20 blur-[120px]" 
-      />
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 1, delay: 0.2 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-indigo-600/20 blur-[120px]" 
-      />
-      
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center">
-        <motion.div
-           initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
-           whileInView={{ scale: 1, opacity: 1, rotate: 0 }}
-           exit={{ scale: 0.9, opacity: 0, transition: { duration: 0.4 } }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.8, ease: easeOutExpo }}
-           className="p-4 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 mb-8"
-        >
-          <Cloud size={48} className="text-cyan-400" />
-        </motion.div>
-        
-        <motion.h1 
-           initial={{ y: 40, opacity: 0 }}
-           whileInView={{ y: 0, opacity: 1 }}
-           exit={{ y: -40, opacity: 0, transition: { duration: 0.4 } }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.8, delay: 0.1, ease: easeOutExpo }}
-           className="text-5xl sm:text-7xl md:text-8xl font-display font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-slate-200 to-slate-500 bg-clip-text text-transparent"
-        >
-          Own Your Cloud.
-        </motion.h1>
-        
-        <motion.p 
-           initial={{ y: 30, opacity: 0 }}
-           whileInView={{ y: 0, opacity: 1 }}
-           exit={{ y: -30, opacity: 0, transition: { duration: 0.4 } }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.8, delay: 0.2, ease: easeOutExpo }}
-           className="text-lg sm:text-2xl text-slate-400 font-medium max-w-2xl px-4"
-        >
-          Reclaim decades of historical data. Build a sovereign intelligence engine on Microsoft and Google Data Lakes.
-        </motion.p>
-      </div>
-
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        viewport={{ once: false }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-        className="absolute bottom-24 md:bottom-10 text-slate-500 flex flex-col items-center gap-2"
-      >
-        <span className="text-xs tracking-widest uppercase font-semibold text-slate-400">Scroll to Explore</span>
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-          <ChevronDown size={20} />
-        </motion.div>
-      </motion.div>
-    </div>
-  );
+type IntakeForm = {
+  fullName: string;
+  company: string;
+  email: string;
+  phone: string;
+  customerId: string;
+  location: string;
+  preferredContact: string;
+  priority: Priority;
+  category: string;
+  affectedAreas: string[];
+  summary: string;
+  details: string;
+  impact: string;
+  desiredOutcome: string;
+  availability: string;
+  consent: boolean;
 };
 
-const ArchitectureDiagram = () => {
-  return (
-    <div className="w-full h-auto min-h-[400px] md:min-h-[320px] bg-slate-950/50 rounded-2xl border border-slate-800 p-6 flex flex-col md:flex-row items-center justify-between relative overflow-hidden mt-8">
-      
-      {/* Background connecting lines */}
-      <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-slate-800 -translate-y-1/2 z-0" />
-      <motion.div 
-        animate={{ backgroundPosition: ['0px 0px', '100px 0px'] }}
-        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-        className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent -translate-y-1/2 z-0"
-        style={{ backgroundSize: '100px 2px' }}
-      />
-      
-      {/* Vertical connecting lines for mobile */}
-      <div className="md:hidden absolute left-1/2 top-0 w-[2px] h-full bg-slate-800 -translate-x-1/2 z-0" />
-      <motion.div 
-        animate={{ backgroundPosition: ['0px 0px', '0px 100px'] }}
-        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-        className="md:hidden absolute left-1/2 top-[10%] w-[2px] h-[80%] bg-gradient-to-b from-transparent via-cyan-500/50 to-transparent -translate-x-1/2 z-0"
-        style={{ backgroundSize: '2px 100px' }}
-      />
+const priorityOptions: Array<{
+  value: Priority;
+  label: string;
+  response: string;
+  description: string;
+  styles: string;
+}> = [
+  {
+    value: 'critical',
+    label: 'ER / Critical',
+    response: 'Response target: 15 minutes',
+    description: 'Service down, safety concern, VIP escalation, or customer cannot proceed.',
+    styles: 'border-red-400/60 bg-red-500/10 text-red-100',
+  },
+  {
+    value: 'urgent',
+    label: 'Urgent',
+    response: 'Response target: 1 hour',
+    description: 'Major friction, deadline risk, or multiple customers/team members impacted.',
+    styles: 'border-orange-400/60 bg-orange-500/10 text-orange-100',
+  },
+  {
+    value: 'standard',
+    label: 'Standard',
+    response: 'Response target: same business day',
+    description: 'A specific request, question, or problem that is not blocking work.',
+    styles: 'border-blue-400/60 bg-blue-500/10 text-blue-100',
+  },
+  {
+    value: 'planning',
+    label: 'Planning',
+    response: 'Response target: 2 business days',
+    description: 'Future service need, onboarding request, process improvement, or discovery.',
+    styles: 'border-emerald-400/60 bg-emerald-500/10 text-emerald-100',
+  },
+];
 
-      {/* Node 1: Sources */}
-      <motion.div 
-        whileHover={{ scale: 1.05 }}
-        className="relative z-10 flex flex-col items-center bg-slate-900 border border-slate-700/50 p-4 rounded-xl shadow-lg shadow-black/50 w-full md:w-auto"
-      >
-        <div className="flex gap-2 mb-3">
-          <div className="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
-            <Cloud size={20} />
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center border border-orange-500/30">
-            <Database size={20} />
-          </div>
-        </div>
-        <span className="text-sm font-semibold text-slate-300">Legacy Silos</span>
-        <span className="text-xs text-slate-500 mt-1 text-center">GCP / Azure / On-Prem</span>
-      </motion.div>
+const categories = [
+  'Account or billing',
+  'Technical support',
+  'Order or service update',
+  'Product question',
+  'Complaint or escalation',
+  'New service request',
+  'Other customer need',
+];
 
-      {/* Node 2: Sovereign Lake */}
-      <motion.div 
-        initial={{ boxShadow: '0 0 0 rgba(6, 182, 212, 0)' }}
-        animate={{ boxShadow: ['0 0 20px rgba(6, 182, 212, 0.2)', '0 0 40px rgba(6, 182, 212, 0.4)', '0 0 20px rgba(6, 182, 212, 0.2)'] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        whileHover={{ scale: 1.05 }}
-        className="relative z-10 flex flex-col items-center bg-slate-900 border border-cyan-500/50 p-6 rounded-2xl my-4 md:my-0 w-full md:w-auto"
-      >
-        <div className="absolute inset-0 bg-cyan-500/5 rounded-2xl" />
-        <Network size={36} className="text-cyan-400 mb-3 relative z-10" />
-        <span className="text-base font-bold text-white relative z-10">Sovereign Data Lake</span>
-        <span className="text-xs text-cyan-200/70 mt-1 text-center max-w-[120px] relative z-10">Unified, normalized, and instantly queryable</span>
-      </motion.div>
+const affectedAreaOptions = [
+  'Account access',
+  'Billing',
+  'Delivery / fulfillment',
+  'Website / app',
+  'Product quality',
+  'Scheduling',
+  'Communication',
+  'Other',
+];
 
-      {/* Node 3: Compute & AI */}
-      <motion.div 
-        whileHover={{ scale: 1.05 }}
-        className="relative z-10 flex flex-col items-center bg-slate-900 border border-slate-700/50 p-4 rounded-xl shadow-lg shadow-black/50 w-full md:w-auto"
-      >
-        <div className="flex gap-2 mb-3">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-            <Cpu size={20} />
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
-            <Zap size={20} />
-          </div>
-        </div>
-        <span className="text-sm font-semibold text-slate-300">Compute & AI</span>
-        <span className="text-xs text-slate-500 mt-1 text-center">LLM Grounding & Analytics</span>
-      </motion.div>
-
-    </div>
-  );
+const initialForm: IntakeForm = {
+  fullName: '',
+  company: '',
+  email: '',
+  phone: '',
+  customerId: '',
+  location: '',
+  preferredContact: 'Email',
+  priority: 'urgent',
+  category: 'Technical support',
+  affectedAreas: [],
+  summary: '',
+  details: '',
+  impact: '',
+  desiredOutcome: '',
+  availability: '',
+  consent: false,
 };
 
-const SlideHistory = () => {
-  const [activeEra, setActiveEra] = useState(0);
+const inputClass =
+  'w-full rounded-2xl border border-slate-700/80 bg-slate-950/80 px-4 py-3 text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-400/20';
 
-  const eras = [
-    {
-      year: "Pre-2005",
-      title: "The Local Era",
-      desc: "Physical control. Racks of hardware or filing cabinets. Secure, but impossible to scale dynamically.",
-      airbnb: "Paper ledgers + Excel on laptop. Bookings via phone/email (Hotmail/Yahoo).",
-      apartment: "Paper leases in filing cabinets. Access databases on office PC.",
-      storage: "Local hard drive. Physical filing cabinets. On-site server.",
-      flow: "Sneaker-net (USB/CD), fax, physical mail, early email.",
-      control: "Full local control. Data loss risk (hardware failure). No real-time collaboration. High control, low convenience.",
-      icon: HardDrive,
-      color: "text-slate-400",
-      bgBorder: "border-slate-600"
-    },
-    {
-      year: "2006–2012",
-      title: "Early Cloud Transition",
-      desc: "We rented servers. We traded control for convenience and scale.",
-      airbnb: "Gmail + Google Calendar. Early Google Docs/Sheets.",
-      apartment: "Exchange/Outlook. On-prem SharePoint or early Office 365.",
-      storage: "Mix: Local PC + vendor data centers. Google Drive/Dropbox buckets.",
-      flow: "Email threads + attachments. Shared folders/links. Manual uploads.",
-      control: "Shifting. Vendor manages underlying storage. Convenience gain (access anywhere), but vendor lock-in begins.",
-      icon: CloudRain,
-      color: "text-blue-400",
-      bgBorder: "border-blue-500/50"
-    },
-    {
-      year: "2013–2019",
-      title: "Mobile & Collab Boom",
-      desc: "Real-time synced documents. APIs integrate tools. Mobile apps explode.",
-      airbnb: "Google Workspace adoption. Real-time Docs. Zapier integrations.",
-      apartment: "Microsoft 365 rollout. OneDrive + Teams (2017+). Cloud PMS.",
-      storage: "Primarily in Google Cloud or Azure. Starting global replication.",
-      flow: "Real-time synced docs + links. API flows between tools. Mobile apps.",
-      control: "Mostly vendor-controlled. Huge scale, but data sprawl. Compliance harder to audit.",
-      icon: Boxes,
-      color: "text-rose-400",
-      bgBorder: "border-rose-500/50"
-    },
-    {
-      year: "2020–2026",
-      title: "Hyperscale + AI Era",
-      desc: "Global major clouds. Intelligent orchestration. But abstracted control.",
-      airbnb: "Google Workspace + Gemini. Dynamic pricing, cloud-native.",
-      apartment: "Microsoft 365 + Copilot + Power Platform. Integrated PMS.",
-      storage: "Global major clouds (Google Cloud worldwide, Azure global footprint). Multi-tenant.",
-      flow: "Automated workflows, AI summaries, instant portals, API ecosystems.",
-      control: "Abstracted global control. Extreme scale and AI. But massive vendor dependency and data sovereignty concerns.",
-      icon: Database,
-      color: "text-emerald-400",
-      bgBorder: "border-emerald-500/50"
+const labelClass = 'mb-2 block text-sm font-semibold text-slate-200';
+
+function App() {
+  const [form, setForm] = useState<IntakeForm>(initialForm);
+  const [submittedAt, setSubmittedAt] = useState<string | null>(null);
+
+  const selectedPriority = useMemo(
+    () => priorityOptions.find((option) => option.value === form.priority) ?? priorityOptions[1],
+    [form.priority],
+  );
+
+  const ticketNumber = useMemo(() => {
+    if (!submittedAt) {
+      return '';
     }
-  ];
+
+    const timestamp = new Date(submittedAt).getTime().toString().slice(-6);
+    return `CS-${timestamp}`;
+  }, [submittedAt]);
+
+  const updateField = <Field extends keyof IntakeForm>(field: Field, value: IntakeForm[Field]) => {
+    setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const toggleAffectedArea = (area: string) => {
+    setForm((current) => {
+      const exists = current.affectedAreas.includes(area);
+      return {
+        ...current,
+        affectedAreas: exists
+          ? current.affectedAreas.filter((item) => item !== area)
+          : [...current.affectedAreas, area],
+      };
+    });
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmittedAt(new Date().toISOString());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleReset = () => {
+    setForm(initialForm);
+    setSubmittedAt(null);
+  };
 
   return (
-    <div id="slide-history" className="relative min-h-[100dvh] w-full snap-start flex flex-col justify-center p-6 sm:p-12 overflow-hidden bg-[#0A0F1C]">
-      <div className="absolute top-1/4 right-0 w-[60vw] h-[60vw] bg-indigo-900/10 blur-[120px] rounded-full pointer-events-none" />
-      
-      <div className="relative z-10 max-w-6xl mx-auto w-full pt-16 md:pt-0">
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           exit={{ opacity: 0, y: -30 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.6, ease: easeOutExpo }}
-           className="text-center mb-8 md:mb-16"
-        >
-          <div className="inline-flex items-center gap-2 text-indigo-400 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-4 border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 rounded-full">
-            The Evolution of Control
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-6">From Racks to Sovereign Lakes.</h2>
-          <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed px-4">
-            A 30-year journey of losing control to gain scale, and finally getting it all back.
-          </p>
-        </motion.div>
-
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center">
-          {/* Era Selector */}
-          <div className="flex w-full lg:w-auto overflow-x-auto lg:overflow-visible lg:flex-col gap-4 hide-scrollbar pb-4 lg:pb-0 px-2 snap-x snap-mandatory">
-            {eras.map((era, idx) => (
-              <button 
-                key={idx}
-                onClick={() => setActiveEra(idx)}
-                className={`snap-center shrink-0 w-[240px] lg:w-[280px] text-left p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden group ${activeEra === idx ? 'bg-slate-800/80 ' + era.bgBorder + ' shadow-[0_0_20px_rgba(0,0,0,0.3)]' : 'bg-slate-900/40 border-slate-800 hover:border-slate-700 opacity-60 hover:opacity-100'}`}
-              >
-                {activeEra === idx && (
-                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                )}
-                <div className="flex items-center justify-between mb-2">
-                   <div className="text-xs font-bold tracking-widest uppercase text-slate-500">{era.year}</div>
-                   {(() => {
-                        const Icon = era.icon;
-                        return <Icon size={18} className={activeEra === idx ? era.color : "text-slate-600"} />;
-                   })()}
-                </div>
-                <div className={`font-display font-semibold sm:text-lg transition-colors ${activeEra === idx ? 'text-white' : 'text-slate-400'}`}>{era.title}</div>
-              </button>
-            ))}
-          </div>
-
-          {/* Active Era Display */}
-          <div className="flex-1 w-full min-h-[500px] relative mt-4 lg:mt-0">
-             <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeEra}
-                  initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="absolute inset-0 bg-slate-800/40 border border-slate-700/50 rounded-3xl p-6 sm:p-10 flex flex-col justify-center items-center text-center backdrop-blur-md overflow-hidden"
-                >
-                  <div className={`absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] ${eras[activeEra].color.replace('text-', 'from-')} via-transparent to-transparent pointer-events-none`} />
-                  
-                  <div className="w-full flex-1 flex flex-col justify-center items-center">
-                    <h3 className="text-2xl sm:text-3xl font-display font-bold text-white mb-2 relative z-10">{eras[activeEra].title}</h3>
-                    <p className="text-base text-slate-300 max-w-lg leading-relaxed relative z-10 mb-6">{eras[activeEra].desc}</p>
-                    
-                    {/* Personas */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full text-left relative z-10 mb-6">
-                      <div className="bg-slate-900/60 border border-slate-700/50 p-4 rounded-xl shadow-md">
-                        <div className="text-[10px] font-bold text-rose-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                          <MapPin size={12} /> Airbnb Host (Google)
-                        </div>
-                        <div className="text-slate-300 text-sm leading-relaxed">{eras[activeEra].airbnb}</div>
-                      </div>
-                      <div className="bg-slate-900/60 border border-slate-700/50 p-4 rounded-xl shadow-md">
-                        <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                          <Building2 size={12} /> Apartment Owner (MSFT)
-                        </div>
-                        <div className="text-slate-300 text-sm leading-relaxed">{eras[activeEra].apartment}</div>
-                      </div>
-                    </div>
-                    
-                    {/* Infra Attributes */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full text-left relative z-10 border-t border-slate-700/50 pt-6">
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Database size={12} /> Storage</div>
-                        <div className="text-slate-400 text-xs leading-relaxed">{eras[activeEra].storage}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Network size={12} /> Flow</div>
-                        <div className="text-slate-400 text-xs leading-relaxed">{eras[activeEra].flow}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Shield size={12} /> Control & Trade-offs</div>
-                        <div className="text-slate-400 text-xs leading-relaxed">{eras[activeEra].control}</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-             </AnimatePresence>
-          </div>
-        </div>
+    <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <div className="pointer-events-none fixed inset-0">
+        <div className="absolute left-[-10rem] top-[-10rem] h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl" />
+        <div className="absolute right-[-8rem] top-1/3 h-[28rem] w-[28rem] rounded-full bg-blue-600/20 blur-3xl" />
+        <div className="absolute bottom-[-12rem] left-1/4 h-[30rem] w-[30rem] rounded-full bg-emerald-500/10 blur-3xl" />
       </div>
-    </div>
-  );
-};
 
-const Slide2 = () => {
-  return (
-    <div id="slide-2" className="relative min-h-[100dvh] w-full snap-start flex flex-col justify-center p-6 sm:p-12 bg-[#050B14]">
-      {/* Subtle Grid Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30" />
-      
-      <div className="relative z-10 max-w-5xl mx-auto w-full pt-12 md:pt-0">
-        <motion.div
-           initial={{ opacity: 0, x: -30 }}
-           whileInView={{ opacity: 1, x: 0 }}
-           exit={{ opacity: 0, x: -30 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.6, ease: easeOutExpo }}
-           className="mb-8 md:mb-12"
-        >
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-4">The Data Lake Advantage</h2>
-          <p className="text-slate-400 text-lg max-w-2xl px-1">Harnessing Azure and GCP infrastructure means your data isn't just stored—it's primed for compute. Break down decades of walled gardens into a single, intelligent entity.</p>
-        </motion.div>
-
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: easeOutExpo }}
-            className="md:col-span-2 p-8 rounded-3xl bg-slate-900/50 border border-slate-800 backdrop-blur-sm overflow-hidden relative group"
-          >
-            <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-110 transition-transform duration-700">
-              <Database size={120} />
+      <section className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-8 sm:px-8 lg:px-10">
+        <header className="grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-cyan-950/20 backdrop-blur md:grid-cols-[1.1fr_0.9fr] md:p-10">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
+              <LifeBuoy size={18} />
+              Customer Service Intake ER
             </div>
-            <h3 className="text-2xl font-display font-semibold mb-3 text-cyan-400 relative z-10">Decades of Scale</h3>
-            <p className="text-slate-300 relative z-10 max-w-sm">
-              Don't let historical telemetry, financial records, and operational metrics rot in cold storage. Bring it all into a unified, hot-queryable lake ready for machine learning.
+            <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Tell us what happened. We will triage the next best action.
+            </h1>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+              Use this form to capture the customer, the service need, urgency, impact, and the
+              resolution you want. It is structured like an emergency intake so the support team can
+              route critical requests first.
             </p>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: easeOutExpo }}
-            className="p-8 rounded-3xl bg-slate-900/50 border border-slate-800 backdrop-blur-sm relative group overflow-hidden"
-          >
-             <div className="absolute -right-4 -bottom-4 bg-indigo-500/20 blur-2xl w-32 h-32 rounded-full" />
-             <Server className="text-indigo-400 mb-4" size={32} />
-             <h3 className="text-xl font-display font-semibold mb-2 text-white">Hybrid Freedom</h3>
-             <p className="text-slate-400 text-sm">Deploy across GCP and Azure seamlessly avoiding vendor lock-in. Maintain optionality while leveraging native toolchains.</p>
-          </motion.div>
-        </div>
-
-        <motion.div
-           initial={{ opacity: 0, y: 40 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           exit={{ opacity: 0, scale: 0.95 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.7, delay: 0.3, ease: easeOutExpo }}
-        >
-          <ArchitectureDiagram />
-        </motion.div>
-
-      </div>
-    </div>
-  );
-};
-
-const Slide2_5 = () => {
-  return (
-    <div id="slide-3" className="relative min-h-[100dvh] w-full snap-start flex flex-col items-center justify-center p-6 sm:p-12 overflow-hidden bg-slate-950">
-      <div className="absolute right-0 top-1/4 w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[100px] mix-blend-screen" />
-      
-      <div className="relative z-10 max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 w-full pt-16 md:pt-0">
-        <motion.div 
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -40 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: easeOutExpo }}
-          className="flex-1"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6">
-            <Network size={16} /> Intelligent Fabric
-          </div>
-          <h2 className="text-4xl sm:text-5xl font-display font-bold text-white mb-6">
-            AI-Ready Architecture
-          </h2>
-          <p className="text-xl text-slate-300 mb-6 font-light leading-relaxed">
-            Your customized data lake becomes the native grounding truth for Large Language Models. 
-          </p>
-          <p className="text-lg text-slate-400">
-            Turn 20 years of PDFs, operational logs, and spreadsheets into a conversational oracle. Stop searching for answers and start having dialogues with your historical intelligence.
-          </p>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
-          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: easeOutExpo }}
-          className="flex-1 w-full max-w-md relative"
-        >
-          <div className="aspect-square rounded-full border border-slate-800 flex items-center justify-center relative bg-slate-900/50 backdrop-blur-3xl p-8">
-            <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-[spin_10s_linear_infinite]" style={{ borderStyle: 'dashed' }} />
-            <div className="absolute inset-4 rounded-full border border-indigo-500/20 animate-pulse" />
-            <div className="text-center z-10 px-4">
-               <Cpu size={64} className="text-blue-400 mx-auto mb-6" />
-               <h3 className="text-2xl font-display font-medium text-white mb-3">Grounding Engine</h3>
-               <p className="text-slate-400 text-sm">Continuously learning from your proprietary data lakes in real-time. Native API integration.</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-};
-
-const SlideEmailIsDead = () => {
-  return (
-    <div id="slide-4" className="relative min-h-[100dvh] w-full snap-start flex flex-col justify-center p-6 sm:p-12 overflow-hidden bg-[#09050d]">
-      <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-purple-900/10 blur-[120px] rounded-full pointer-events-none" />
-      
-      <div className="relative z-10 max-w-6xl mx-auto w-full pt-12 md:pt-0">
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           exit={{ opacity: 0, y: -30 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.6, ease: easeOutExpo }}
-           className="text-center mb-12 sm:mb-16"
-        >
-          <div className="inline-flex items-center gap-2 text-rose-400 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-4 border border-rose-500/20 bg-rose-500/10 px-4 py-1.5 rounded-full">
-            <XCircle size={16} /> The Hidden Tax on Business
-          </div>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-white mb-6">Email is Dead. <span className="text-slate-500">Stop using it for work.</span></h2>
-          <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
-            Inbox-based task management leads to delays, lost files, and severe security risks. We replace it with an AI-driven collaboration layer orchestrating both Microsoft and Google.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-          {/* The Old Way */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: easeOutExpo }}
-            className="bg-slate-900/60 border border-rose-900/30 p-6 md:p-10 rounded-3xl backdrop-blur-sm"
-          >
-            <h3 className="text-2xl font-display font-semibold text-rose-400 mb-6 flex items-center gap-3 border-b border-rose-900/30 pb-4">
-              <Mail size={24} /> The Old Way (Email Silos)
-            </h3>
-            <ul className="space-y-5 text-slate-300">
-              <li className="flex items-start gap-4"><XCircle className="text-rose-500 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Siloed Information:</strong> Data is trapped in individual inboxes, invisible to the organization.</div></li>
-              <li className="flex items-start gap-4"><XCircle className="text-rose-500 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Version Control Nightmares:</strong> Sending "Report_v4_Final.docx" back and forth endlessly.</div></li>
-              <li className="flex items-start gap-4"><XCircle className="text-rose-500 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Security Risk:</strong> Attachments downloaded to unmanaged local drives and personal devices.</div></li>
-            </ul>
-          </motion.div>
-
-          {/* The AI OS */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 30 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: easeOutExpo }}
-            className="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 border border-purple-500/30 p-6 md:p-10 rounded-3xl backdrop-blur-sm shadow-[0_0_30px_rgba(139,92,246,0.1)] relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-8 opacity-10"><Network size={120} /></div>
-            <h3 className="text-2xl font-display font-semibold text-purple-300 mb-6 flex items-center gap-3 border-b border-purple-500/30 pb-4 relative z-10">
-              <CheckCircle size={24} /> The Unified AI Engine
-            </h3>
-            <ul className="space-y-5 text-slate-300 relative z-10">
-              <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Ask, Don't Search:</strong> Ask your AI for an update; it directly queries MSFT and GCP securely.</div></li>
-              <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Real-Time Sync:</strong> Shared docs and active collaboration replacing endless threads.</div></li>
-              <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Zero Attachments:</strong> Unified, strictly-governed links backed by Microsoft 365 compliance.</div></li>
-            </ul>
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const SlideWorkflows = () => {
-  return (
-    <div id="slide-5" className="relative min-h-[100dvh] w-full snap-start flex flex-col justify-center p-6 sm:p-12 overflow-hidden bg-slate-900">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-slate-900/50 to-slate-900 pointer-events-none" />
-      
-      <div className="relative z-10 max-w-6xl mx-auto w-full pt-12 md:pt-0">
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           exit={{ opacity: 0, y: -30 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.6, ease: easeOutExpo }}
-           className="text-center mb-12 sm:mb-16"
-        >
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-6">Build Your Own Custom ERP</h2>
-          <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
-            Why rent generic software schemas? We teach your team to map out bespoke workflows where AI routes data intelligently between platforms.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.3 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-slate-800/80 border border-slate-700 p-6 rounded-2xl hover:bg-slate-800 transition-colors"
-          >
-            <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center mb-4"><Briefcase size={24} /></div>
-            <h3 className="text-xl font-bold text-white mb-2">Client Management</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">AI structures onboarding in Microsoft, while collaborative execution happens live in Google Docs with shared visibility.</p>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.3 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-slate-800/80 border border-slate-700 p-6 rounded-2xl hover:bg-slate-800 transition-colors"
-          >
-            <div className="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mb-4"><FlaskConical size={24} /></div>
-            <h3 className="text-xl font-bold text-white mb-2">Operations & Labs</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Automated status tracking. No emails asking for updates. AI fetches the status from standard Sheets and pings Teams automatically.</p>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.3 }} transition={{ duration: 0.5, delay: 0.3 }}
-            className="bg-slate-800/80 border border-slate-700 p-6 rounded-2xl hover:bg-slate-800 transition-colors"
-          >
-            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mb-4"><DollarSign size={24} /></div>
-            <h3 className="text-xl font-bold text-white mb-2">Invoicing & Finance</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Invoices generated automatically via AI scraping project milestones. Securely stored in a SharePoint vault, linked for payment.</p>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.3 }} transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-slate-800/80 border border-slate-700 p-6 rounded-2xl hover:bg-slate-800 transition-colors"
-          >
-            <div className="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center mb-4"><BarChart3 size={24} /></div>
-            <h3 className="text-xl font-bold text-white mb-2">Auto-Reporting</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Stop building slide decks manually. AI queries both MS and Google datasets to generate weekly executive summaries instantly.</p>
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Slide3 = () => {
-  return (
-    <div id="slide-6" className="relative min-h-[100dvh] w-full snap-start flex flex-col items-center justify-center p-6 sm:p-12 overflow-hidden bg-slate-950">
-      {/* Conic Gradient effect */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-40 mix-blend-color-dodge">
-        <div className="w-[100vw] h-[100vw] rounded-full bg-[conic-gradient(from_90deg_at_50%_50%,#020617_0%,#1e1b4b_25%,#0f172a_50%,#082f49_75%,#020617_100%)] blur-3xl animate-[spin_60s_linear_infinite]" />
-      </div>
-
-      <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center pt-12 md:pt-0">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
-          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: easeOutExpo }}
-          className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center mb-8"
-        >
-          <Lock size={32} className="text-emerald-400" />
-        </motion.div>
-
-        <motion.h2 
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          exit={{ y: -30, opacity: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: easeOutExpo }}
-          className="text-4xl sm:text-6xl font-display font-bold text-white mb-6 px-2"
-        >
-          Total Sovereignty.
-        </motion.h2>
-
-        <motion.p 
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          exit={{ y: -30, opacity: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: easeOutExpo }}
-          className="text-xl sm:text-2xl text-slate-300 font-medium mb-12 max-w-2xl px-4"
-        >
-          When you own the lake, you own the insights. No external data scraping. Complete governance and privacy.
-        </motion.p>
-
-        <div className="flex flex-wrap justify-center gap-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.3, ease: easeOutExpo }}
-            className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full text-slate-200"
-          >
-            <Shield size={18} className="text-emerald-400" /> End-to-End Encryption
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.4, ease: easeOutExpo }}
-            className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full text-slate-200"
-          >
-            <Cpu size={18} className="text-blue-400" /> Private Compute Enclaves
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.5, ease: easeOutExpo }}
-            className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full text-slate-200"
-          >
-            <Zap size={18} className="text-amber-400" /> Dedicated Throughput
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const SlideCostOfBloat = () => {
-  return (
-    <div id="slide-7" className="relative min-h-[100dvh] w-full snap-start flex flex-col justify-center items-center p-6 sm:p-12 overflow-hidden bg-slate-50">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-slate-200 via-slate-50 to-slate-50 pointer-events-none" />
-      
-      <div className="relative z-10 max-w-6xl mx-auto w-full pt-12 md:pt-0">
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           exit={{ opacity: 0, y: -30 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.6, ease: easeOutExpo }}
-           className="text-center mb-12 sm:mb-16"
-        >
-          <h2 className="text-3xl sm:text-5xl font-display font-bold text-slate-900 mb-6">The Cost of Bloat vs. Optimization</h2>
-          <p className="text-slate-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-            Stop paying for overlapping SaaS products that fracture your data. Consolidate into a unified infrastructure and amplify your execution.
-          </p>
-        </motion.div>
-
-        <div className="bg-slate-900 text-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative">
-          
-          {/* Typical SaaS Stack */}
-          <div className="p-8 md:p-12 flex-1 border-b md:border-b-0 md:border-r border-slate-700 relative overflow-hidden">
-            <h3 className="text-rose-400 font-bold text-xl mb-6 flex items-center gap-3">
-              <Layers size={24} /> Typical SaaS Stack
-            </h3>
-            <div className="space-y-4 text-slate-400 font-medium">
-              <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg"><span className="flex items-center gap-3 text-white"><Mail size={18} className="text-slate-500" /> Corporate Email</span> <span className="text-rose-400">$$$</span></div>
-              <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg"><span className="flex items-center gap-3 text-white"><MessageSquareQuote size={18} className="text-slate-500" /> Slack / Chat</span> <span className="text-rose-400">$$$</span></div>
-              <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg"><span className="flex items-center gap-3 text-white"><Briefcase size={18} className="text-slate-500" /> Tasks / Asana</span> <span className="text-rose-400">$$$</span></div>
-              <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg"><span className="flex items-center gap-3 text-white"><Database size={18} className="text-slate-500" /> Dropbox / Box</span> <span className="text-rose-400">$$$</span></div>
-            </div>
-            <div className="mt-8 pt-6 border-t border-slate-700">
-              <div className="text-sm text-rose-400 font-semibold uppercase tracking-wider">Result: High Cost & Friction</div>
-            </div>
           </div>
 
-          {/* RJEC System */}
-          <div className="p-8 md:p-12 flex-1 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none" />
-            <h3 className="text-emerald-400 font-bold text-xl mb-6 flex items-center gap-3 relative z-10">
-              <Zap size={24} /> The RJEC System
-            </h3>
-            <div className="space-y-4 text-slate-300 font-medium relative z-10">
-              <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Shield size={18} className="text-blue-400" /> Framework (M365)</span> <CheckCircle size={18} className="text-emerald-400" /></div>
-              <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Zap size={18} className="text-rose-400" /> Speed (Google)</span> <CheckCircle size={18} className="text-emerald-400" /></div>
-              <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Cpu size={18} className="text-purple-400" /> AI Execution Layer</span> <CheckCircle size={18} className="text-emerald-400" /></div>
-              
-              <div className="mt-6 p-4 bg-emerald-500/10 rounded-xl text-sm border border-emerald-500/20 text-emerald-100">
-                Replaces chat tools, standalone video systems, external task managers, and disparate storage entirely.
+          <aside className="rounded-3xl border border-slate-700/80 bg-slate-950/70 p-6">
+            <div className="mb-5 flex items-center gap-3 text-white">
+              <ClipboardList className="text-cyan-300" size={28} />
+              <div>
+                <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Current triage</p>
+                <h2 className="text-2xl font-bold">{selectedPriority.label}</h2>
               </div>
             </div>
-            <div className="mt-6 pt-6 border-t border-slate-700 relative z-10">
-              <div className="text-sm text-emerald-400 font-bold uppercase tracking-wider">Result: Unified OS & Lower TCO</div>
+            <div className={`rounded-2xl border p-4 ${selectedPriority.styles}`}>
+              <p className="font-semibold">{selectedPriority.response}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-200">{selectedPriority.description}</p>
             </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Slide4 = () => {
-  return (
-    <div id="slide-8" className="relative min-h-[100dvh] w-full snap-start flex flex-col items-center justify-center p-6 sm:p-12 bg-black border-t border-white/5 overflow-hidden">
-      {/* Dynamic background effect */}
-      <motion.div 
-        animate={{ rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-        className="absolute w-[150vw] h-[150vw] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-slate-900/5 to-transparent blur-3xl opacity-50"
-      />
-
-      <div className="relative z-10 max-w-4xl mx-auto text-center px-4 pt-12 md:pt-0">
-        <motion.div
-           initial={{ opacity: 0, y: 40 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           exit={{ opacity: 0, y: -40 }}
-           viewport={{ once: false, amount: 0.3 }}
-           transition={{ duration: 0.8, ease: easeOutExpo }}
-           className="flex flex-col items-center w-full"
-        >
-          <div className="mb-8 flex justify-center w-full">
-            <div className="bg-slate-900/80 border border-slate-700/50 p-4 rounded-3xl shadow-xl flex items-center gap-6 backdrop-blur-lg">
-               <div className="text-center px-4">
-                 <div className="text-3xl font-display font-bold text-white mb-1">20+</div>
-                 <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Years of Data</div>
-               </div>
-               <div className="w-px h-12 bg-slate-700" />
-               <div className="text-center px-4">
-                 <div className="text-3xl font-display font-bold text-blue-400 mb-1">1</div>
-                 <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Unified Source</div>
-               </div>
+            <div className="mt-5 grid grid-cols-2 gap-3 text-sm text-slate-300">
+              <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+                <Clock className="mb-2 text-blue-300" size={20} />
+                Capture urgency
+              </div>
+              <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+                <Users className="mb-2 text-emerald-300" size={20} />
+                Identify impact
+              </div>
+              <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+                <MessageSquare className="mb-2 text-purple-300" size={20} />
+                Clarify outcome
+              </div>
+              <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+                <ShieldCheck className="mb-2 text-cyan-300" size={20} />
+                Route safely
+              </div>
             </div>
-          </div>
+          </aside>
+        </header>
 
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-300">
-            Start Your Sandbox
-          </h2>
-          <p className="text-slate-400 text-lg sm:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed">
-            Ready to stitch together massive, dispersed data silos into a singular, conversational intelligence engine? The roadmap to data sovereignty begins here.
-          </p>
-          
-          <button className="group relative w-full sm:w-auto inline-flex items-center justify-center px-10 py-5 font-semibold text-white transition-all duration-200 ease-in-out bg-slate-900 rounded-full hover:scale-105 active:scale-95 outline-none overflow-hidden">
-            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 opacity-20 transition-opacity group-hover:opacity-40"></span>
-            <span className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/50 transition-colors"></span>
-            <span className="relative z-10 flex items-center justify-center gap-3 font-display tracking-wide text-lg sm:text-xl">
-              Initialize Blueprint <Zap size={20} className="text-yellow-400 group-hover:scale-110 transition-transform" />
-            </span>
-          </button>
-        </motion.div>
-      </div>
-      
-      {/* Bottom Footer Credits */}
-      <div className="absolute bottom-6 w-full text-center text-slate-600 text-xs font-medium tracking-widest uppercase px-6 pb-20 md:pb-0">
-        Architected for Microsoft Azure & Google Cloud Platform
-      </div>
-    </div>
-  );
-};
-
-const Navigation = ({ activeIndex, onNavigate }: { activeIndex: number, onNavigate: (index: number) => void }) => {
-  return (
-    <>
-      <div className="hidden md:flex fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 flex-col items-center gap-3 pointer-events-auto">
-        <button 
-          onClick={() => onNavigate(Math.max(0, activeIndex - 1))}
-          className={`p-2 rounded-full transition-all ${activeIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100 hover:bg-white/10'}`}
-          aria-label="Previous slide"
-        >
-          <ArrowUp size={20} className="text-white" />
-        </button>
-        
-        <div className="flex flex-col gap-2 my-2">
-          {Array.from({ length: TOTAL_SLIDES }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => onNavigate(index)}
-              className="w-8 h-8 flex items-center justify-center group"
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              <div 
-                className={`rounded-full transition-all duration-300 ${
-                  activeIndex === index 
-                  ? 'w-2.5 h-2.5 bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]' 
-                  : 'w-1.5 h-1.5 bg-white/30 group-hover:bg-white/60 group-hover:scale-150'
-                }`} 
-              />
-            </button>
-          ))}
-        </div>
-
-        <button 
-          onClick={() => onNavigate(Math.min(TOTAL_SLIDES - 1, activeIndex + 1))}
-          className={`p-2 rounded-full transition-all ${activeIndex === TOTAL_SLIDES - 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100 hover:bg-white/10'}`}
-          aria-label="Next slide"
-        >
-          <ArrowDown size={20} className="text-white" />
-        </button>
-      </div>
-
-      <div className="md:hidden fixed top-0 left-0 w-full h-[3px] bg-slate-800 z-50">
-         <motion.div 
-           className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
-           initial={{ width: 0 }}
-           animate={{ width: `${(activeIndex / (TOTAL_SLIDES - 1)) * 100}%` }}
-           transition={{ duration: 0.3 }}
-         />
-      </div>
-    </>
-  );
-};
-
-export default function App() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [reactions, setReactions] = useState<{id: number, icon: any, color: string, left: string}[]>([]);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const index = Math.round(containerRef.current.scrollTop / window.innerHeight);
-        if (index !== activeIndex) {
-          setActiveIndex(index);
-        }
-      }
-    };
-    
-    // Add debounced resize listener to update scroll position when window resizes
-    const handleResize = () => {
-      if (containerRef.current) {
-        containerRef.current.scrollTo({
-          top: activeIndex * window.innerHeight,
-          behavior: 'auto' // instant snap on resize
-        });
-      }
-    };
-
-    const node = containerRef.current;
-    if (node) {
-      node.addEventListener('scroll', handleScroll, { passive: true });
-      window.addEventListener('resize', handleResize, { passive: true });
-      return () => {
-        node.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', handleResize);
-      };
-    }
-  }, [activeIndex]);
-
-  const handleNavigate = (index: number) => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({
-        top: index * window.innerHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const addReaction = (Icon: any, color: string) => {
-    const newReaction = {
-      id: Date.now(),
-      icon: Icon,
-      color: color,
-      left: `${Math.random() * 80 + 10}%`
-    };
-    setHasStarted(true);
-    setReactions(prev => [...prev, newReaction]);
-    setTimeout(() => {
-      setReactions(prev => prev.filter(r => r.id !== newReaction.id));
-    }, 2000);
-  };
-
-  return (
-    <div 
-      ref={containerRef}
-      className="h-[100dvh] w-full overflow-y-scroll snap-y snap-mandatory bg-slate-950 text-slate-50 hide-scrollbar scroll-smooth relative"
-    >
-      <Navigation activeIndex={activeIndex} onNavigate={handleNavigate} />
-      <Slide1 />
-      <SlideHistory />
-      <Slide2 />
-      <Slide2_5 />
-      <SlideEmailIsDead />
-      <SlideWorkflows />
-      <Slide3 />
-      <SlideCostOfBloat />
-      <Slide4 />
-
-      {/* Floating Global Reactions Overlays */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-40">
-        <AnimatePresence>
-          {reactions.map((reaction) => {
-            const Icon = reaction.icon;
-            return (
-              <motion.div
-                key={reaction.id}
-                initial={{ opacity: 1, y: '100dvh', scale: 0.5 }}
-                animate={{ opacity: 0, y: '-20dvh', scale: 1.5 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-                className={`absolute drop-shadow-lg ${reaction.color}`}
-                style={{ left: reaction.left }}
+        {submittedAt && (
+          <section className="rounded-[2rem] border border-emerald-300/30 bg-emerald-400/10 p-6 shadow-xl shadow-emerald-950/20 md:p-8">
+            <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+              <div>
+                <div className="mb-3 flex items-center gap-3 text-emerald-100">
+                  <CheckCircle2 size={30} />
+                  <h2 className="text-2xl font-bold">Intake ready for review</h2>
+                </div>
+                <p className="max-w-3xl text-slate-200">
+                  Ticket {ticketNumber} has been prepared locally. Connect this form to your help
+                  desk, CRM, or shared inbox when you are ready to send submissions automatically.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-3 font-semibold text-white transition hover:bg-white/15"
               >
-                <Icon size={32} fill="currentColor" />
-              </motion.div>
-            )
-          })}
-        </AnimatePresence>
-      </div>
+                <RefreshCw size={18} />
+                Start new intake
+              </button>
+            </div>
+          </section>
+        )}
 
-      {/* Modern Floating Action Bar */}
-      <div className="fixed bottom-6 pb-[env(safe-area-inset-bottom)] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
-        <motion.div 
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1, duration: 0.6, type: "spring" }}
-          className="bg-slate-900/80 backdrop-blur-xl border border-white/10 p-2 rounded-full shadow-2xl flex gap-2 items-center text-slate-300"
-        >
-          {!hasStarted && (
-            <motion.div 
-              initial={{ width: 'auto', opacity: 1 }}
-              animate={{ width: 0, opacity: 0 }}
-              transition={{ delay: 4, duration: 0.5 }}
-              className="overflow-hidden whitespace-nowrap text-xs font-medium ml-3 mr-1"
-            >
-              React to interact 👉
-            </motion.div>
-          )}
+        <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <section className="space-y-6 rounded-[2rem] border border-white/10 bg-slate-900/70 p-6 backdrop-blur md:p-8">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                Step 1
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-white">Customer details</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Capture who needs help and the safest way to reach them.
+              </p>
+            </div>
 
-          <button onClick={() => addReaction(Heart, 'text-pink-500')} className="p-3 bg-white/5 hover:bg-pink-500/20 text-slate-300 hover:text-pink-400 rounded-full transition-all group outline-none">
-            <Heart size={20} className="group-hover:scale-110 transition-transform" />
-          </button>
-          <button onClick={() => addReaction(Lightbulb, 'text-amber-500')} className="p-3 bg-white/5 hover:bg-amber-500/20 text-slate-300 hover:text-amber-400 rounded-full transition-all group outline-none">
-            <Lightbulb size={20} className="group-hover:scale-110 transition-transform" />
-          </button>
-          <button onClick={() => addReaction(Check, 'text-emerald-500')} className="p-3 bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 rounded-full transition-all group outline-none">
-            <Check size={20} className="group-hover:scale-110 transition-transform" />
-          </button>
-        </motion.div>
-      </div>
-    </div>
+            <div className="grid gap-5">
+              <label>
+                <span className={labelClass}>
+                  <User className="mr-2 inline text-cyan-300" size={16} />
+                  Full name *
+                </span>
+                <input
+                  className={inputClass}
+                  required
+                  value={form.fullName}
+                  onChange={(event) => updateField('fullName', event.target.value)}
+                  placeholder="Jane Smith"
+                />
+              </label>
+
+              <label>
+                <span className={labelClass}>
+                  <Building2 className="mr-2 inline text-cyan-300" size={16} />
+                  Company / organization
+                </span>
+                <input
+                  className={inputClass}
+                  value={form.company}
+                  onChange={(event) => updateField('company', event.target.value)}
+                  placeholder="Acme Co."
+                />
+              </label>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label>
+                  <span className={labelClass}>
+                    <Mail className="mr-2 inline text-cyan-300" size={16} />
+                    Email *
+                  </span>
+                  <input
+                    className={inputClass}
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={(event) => updateField('email', event.target.value)}
+                    placeholder="jane@example.com"
+                  />
+                </label>
+
+                <label>
+                  <span className={labelClass}>
+                    <Phone className="mr-2 inline text-cyan-300" size={16} />
+                    Phone
+                  </span>
+                  <input
+                    className={inputClass}
+                    type="tel"
+                    value={form.phone}
+                    onChange={(event) => updateField('phone', event.target.value)}
+                    placeholder="(555) 123-4567"
+                  />
+                </label>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label>
+                  <span className={labelClass}>Customer / account ID</span>
+                  <input
+                    className={inputClass}
+                    value={form.customerId}
+                    onChange={(event) => updateField('customerId', event.target.value)}
+                    placeholder="Optional"
+                  />
+                </label>
+
+                <label>
+                  <span className={labelClass}>
+                    <MapPin className="mr-2 inline text-cyan-300" size={16} />
+                    Location / time zone
+                  </span>
+                  <input
+                    className={inputClass}
+                    value={form.location}
+                    onChange={(event) => updateField('location', event.target.value)}
+                    placeholder="Chicago, CT"
+                  />
+                </label>
+              </div>
+
+              <label>
+                <span className={labelClass}>Preferred contact method</span>
+                <select
+                  className={inputClass}
+                  value={form.preferredContact}
+                  onChange={(event) => updateField('preferredContact', event.target.value)}
+                >
+                  <option>Email</option>
+                  <option>Phone</option>
+                  <option>Text message</option>
+                  <option>Video call</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section className="space-y-8 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur md:p-8">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                Step 2
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-white">Service need triage</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Select the ER level first, then describe the request in plain language.
+              </p>
+            </div>
+
+            <fieldset>
+              <legend className={labelClass}>
+                <AlertTriangle className="mr-2 inline text-cyan-300" size={16} />
+                Priority level *
+              </legend>
+              <div className="grid gap-3 md:grid-cols-2">
+                {priorityOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className={`cursor-pointer rounded-2xl border p-4 transition ${
+                      form.priority === option.value
+                        ? `${option.styles} shadow-lg shadow-cyan-950/20`
+                        : 'border-slate-700 bg-slate-950/70 hover:border-slate-500'
+                    }`}
+                  >
+                    <input
+                      className="sr-only"
+                      type="radio"
+                      name="priority"
+                      value={option.value}
+                      checked={form.priority === option.value}
+                      onChange={() => updateField('priority', option.value)}
+                    />
+                    <span className="block font-bold">{option.label}</span>
+                    <span className="mt-1 block text-sm text-slate-300">{option.response}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="grid gap-5 md:grid-cols-2">
+              <label>
+                <span className={labelClass}>
+                  <Headphones className="mr-2 inline text-cyan-300" size={16} />
+                  Request category *
+                </span>
+                <select
+                  className={inputClass}
+                  required
+                  value={form.category}
+                  onChange={(event) => updateField('category', event.target.value)}
+                >
+                  {categories.map((category) => (
+                    <option key={category}>{category}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                <span className={labelClass}>
+                  <CalendarClock className="mr-2 inline text-cyan-300" size={16} />
+                  Best times to reach you
+                </span>
+                <input
+                  className={inputClass}
+                  value={form.availability}
+                  onChange={(event) => updateField('availability', event.target.value)}
+                  placeholder="Today 2-5 PM, tomorrow morning, etc."
+                />
+              </label>
+            </div>
+
+            <fieldset>
+              <legend className={labelClass}>Affected area(s)</legend>
+              <div className="flex flex-wrap gap-3">
+                {affectedAreaOptions.map((area) => {
+                  const isChecked = form.affectedAreas.includes(area);
+                  return (
+                    <label
+                      key={area}
+                      className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                        isChecked
+                          ? 'border-cyan-300 bg-cyan-300/15 text-cyan-100'
+                          : 'border-slate-700 bg-slate-950/70 text-slate-300 hover:border-slate-500'
+                      }`}
+                    >
+                      <input
+                        className="sr-only"
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleAffectedArea(area)}
+                      />
+                      {area}
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div className="grid gap-5">
+              <label>
+                <span className={labelClass}>
+                  <Zap className="mr-2 inline text-cyan-300" size={16} />
+                  One-line summary *
+                </span>
+                <input
+                  className={inputClass}
+                  required
+                  value={form.summary}
+                  onChange={(event) => updateField('summary', event.target.value)}
+                  placeholder="Example: Cannot access dashboard before client meeting"
+                />
+              </label>
+
+              <label>
+                <span className={labelClass}>
+                  <FileText className="mr-2 inline text-cyan-300" size={16} />
+                  What happened? *
+                </span>
+                <textarea
+                  className={`${inputClass} min-h-36 resize-y`}
+                  required
+                  value={form.details}
+                  onChange={(event) => updateField('details', event.target.value)}
+                  placeholder="Include what you tried, error messages, order numbers, screenshots to attach later, or who is involved."
+                />
+              </label>
+
+              <label>
+                <span className={labelClass}>Impact if this is not resolved</span>
+                <textarea
+                  className={`${inputClass} min-h-28 resize-y`}
+                  value={form.impact}
+                  onChange={(event) => updateField('impact', event.target.value)}
+                  placeholder="Who is blocked, what deadline is at risk, and how many customers or team members are affected?"
+                />
+              </label>
+
+              <label>
+                <span className={labelClass}>Desired outcome</span>
+                <textarea
+                  className={`${inputClass} min-h-28 resize-y`}
+                  value={form.desiredOutcome}
+                  onChange={(event) => updateField('desiredOutcome', event.target.value)}
+                  placeholder="Tell us what a successful resolution looks like."
+                />
+              </label>
+            </div>
+
+            <label className="flex gap-3 rounded-2xl border border-slate-700 bg-slate-950/70 p-4 text-sm leading-6 text-slate-300">
+              <input
+                className="mt-1 h-4 w-4 rounded border-slate-600 bg-slate-900 text-cyan-400"
+                required
+                type="checkbox"
+                checked={form.consent}
+                onChange={(event) => updateField('consent', event.target.checked)}
+              />
+              I confirm this intake can be used to contact me and route my customer service request
+              to the right team.
+            </label>
+
+            <div className="flex flex-col gap-3 border-t border-slate-800 pt-6 sm:flex-row">
+              <button
+                type="submit"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-4 font-bold text-slate-950 shadow-lg shadow-cyan-950/30 transition hover:bg-cyan-200"
+              >
+                <Send size={18} />
+                Generate intake ticket
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-4 font-semibold text-white transition hover:bg-white/10"
+              >
+                Clear form
+              </button>
+            </div>
+          </section>
+        </form>
+      </section>
+    </main>
   );
 }
 
+export default App;
