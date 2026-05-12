@@ -11,7 +11,8 @@ import {
   Lock, Heart, Lightbulb, MessageSquareQuote, Check,
   ArrowUp, ArrowDown, Mail, XCircle, CheckCircle, 
   Briefcase, FlaskConical, DollarSign, BarChart3, Layers,
-  HardDrive, CloudRain, Boxes, Building2, MapPin
+  HardDrive, CloudRain, Boxes, Building2, MapPin,
+  Code2, Play, FileCheck2, GitBranch, ListChecks, Terminal
 } from 'lucide-react';
 
 const easeOutExpo = [0.16, 1, 0.3, 1];
@@ -56,7 +57,7 @@ const Slide1 = () => {
            transition={{ duration: 0.8, delay: 0.1, ease: easeOutExpo }}
            className="text-5xl sm:text-7xl md:text-8xl font-display font-bold tracking-tight mb-6 bg-gradient-to-br from-white via-slate-200 to-slate-500 bg-clip-text text-transparent"
         >
-          Own Your Cloud.
+          Make Your Data Work.
         </motion.h1>
         
         <motion.p 
@@ -67,7 +68,7 @@ const Slide1 = () => {
            transition={{ duration: 0.8, delay: 0.2, ease: easeOutExpo }}
            className="text-lg sm:text-2xl text-slate-400 font-medium max-w-2xl px-4"
         >
-          Reclaim decades of historical data. Build a sovereign intelligence engine on Microsoft and Google Data Lakes.
+          An AI-like operator for the pre-AI work: code-run playbooks that organize files, draft workflows, and move real business data across Microsoft and Google.
         </motion.p>
       </div>
 
@@ -141,7 +142,7 @@ const ArchitectureDiagram = () => {
         <span className="text-xs text-cyan-200/70 mt-1 text-center max-w-[120px] relative z-10">Unified, normalized, and instantly queryable</span>
       </motion.div>
 
-      {/* Node 3: Compute & AI */}
+      {/* Node 3: Code Worker */}
       <motion.div 
         whileHover={{ scale: 1.05 }}
         className="relative z-10 flex flex-col items-center bg-slate-900 border border-slate-700/50 p-4 rounded-xl shadow-lg shadow-black/50 w-full md:w-auto"
@@ -154,8 +155,8 @@ const ArchitectureDiagram = () => {
             <Zap size={20} />
           </div>
         </div>
-        <span className="text-sm font-semibold text-slate-300">Compute & AI</span>
-        <span className="text-xs text-slate-500 mt-1 text-center">LLM Grounding & Analytics</span>
+        <span className="text-sm font-semibold text-slate-300">Code Worker</span>
+        <span className="text-xs text-slate-500 mt-1 text-center">Playbooks, connectors, and audits</span>
       </motion.div>
 
     </div>
@@ -340,7 +341,7 @@ const Slide2 = () => {
            className="mb-8 md:mb-12"
         >
           <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-4">The Data Lake Advantage</h2>
-          <p className="text-slate-400 text-lg max-w-2xl px-1">Harnessing Azure and GCP infrastructure means your data isn't just stored—it's primed for compute. Break down decades of walled gardens into a single, intelligent entity.</p>
+          <p className="text-slate-400 text-lg max-w-2xl px-1">Harnessing Azure and GCP infrastructure means your data is not just stored. It is structured so small code workers can read, route, reconcile, and explain it without another SaaS layer.</p>
         </motion.div>
 
         {/* Bento Grid */}
@@ -358,7 +359,7 @@ const Slide2 = () => {
             </div>
             <h3 className="text-2xl font-display font-semibold mb-3 text-cyan-400 relative z-10">Decades of Scale</h3>
             <p className="text-slate-300 relative z-10 max-w-sm">
-              Don't let historical telemetry, financial records, and operational metrics rot in cold storage. Bring it all into a unified, hot-queryable lake ready for machine learning.
+              Do not let historical emails, PDFs, invoices, photos, and operational notes rot in cold storage. Bring them into a unified lake that code can inspect and turn into work.
             </p>
           </motion.div>
 
@@ -393,31 +394,134 @@ const Slide2 = () => {
 };
 
 const Slide2_5 = () => {
+  const scenarios = [
+    {
+      label: "Client intake",
+      prompt: "Turn scattered emails, Drive files, and a Teams thread into a clean onboarding packet.",
+      tone: "text-cyan-300 border-cyan-500/30 bg-cyan-500/10",
+      gradient: "from-cyan-500/20 to-blue-500/10",
+      steps: [
+        "Scan shared folders and mailbox labels",
+        "Extract names, deadlines, files, and open questions",
+        "Create a task board with owners and due dates",
+        "Draft the client reply and attach governed links"
+      ],
+      code: [
+        "connect.googleDrive('/clients/new')",
+        "connect.microsoftGraph('teams/intake')",
+        "normalize.records(['email', 'doc', 'sheet'])",
+        "write.sharepoint('Onboarding Packet')"
+      ],
+      artifacts: ["Onboarding packet", "Task checklist", "Client response draft"],
+      outcome: "The visitor sees the work product, not a black-box answer."
+    },
+    {
+      label: "Invoice audit",
+      prompt: "Compare invoices against milestones and flag what is missing before finance sends reminders.",
+      tone: "text-emerald-300 border-emerald-500/30 bg-emerald-500/10",
+      gradient: "from-emerald-500/20 to-teal-500/10",
+      steps: [
+        "Read payment terms from contracts",
+        "Match milestones against sheets and project notes",
+        "Generate exception list with source links",
+        "Prepare approval-ready invoice comments"
+      ],
+      code: [
+        "read.contracts('sharepoint/contracts')",
+        "join.sheets('milestones', 'invoices')",
+        "diff.expectedVsActual()",
+        "export.csv('finance-exceptions')"
+      ],
+      artifacts: ["Exception report", "Approval notes", "Source-link ledger"],
+      outcome: "The tool behaves like AI, but the confidence comes from traceable code paths."
+    },
+    {
+      label: "Ops brief",
+      prompt: "Build a morning operating brief from yesterday's files, tickets, logs, and project updates.",
+      tone: "text-amber-300 border-amber-500/30 bg-amber-500/10",
+      gradient: "from-amber-500/20 to-orange-500/10",
+      steps: [
+        "Pull yesterday's changed files and ticket activity",
+        "Group updates by property, client, and risk",
+        "Write the manager brief in plain language",
+        "Schedule follow-up tasks in the right workspace"
+      ],
+      code: [
+        "watch.changes('24h')",
+        "cluster.by(['property', 'client', 'risk'])",
+        "render.markdown('morning-brief')",
+        "sync.tasks('Planner', 'Google Tasks')"
+      ],
+      artifacts: ["Morning brief", "Risk queue", "Follow-up tasks"],
+      outcome: "People understand what happened and what to do next."
+    }
+  ];
+
+  const [activeScenario, setActiveScenario] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const scenario = scenarios[activeScenario];
+
+  useEffect(() => {
+    setActiveStep(0);
+    setIsRunning(false);
+  }, [activeScenario]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    if (activeStep >= scenario.steps.length - 1) {
+      const doneTimer = window.setTimeout(() => setIsRunning(false), 800);
+      return () => window.clearTimeout(doneTimer);
+    }
+
+    const stepTimer = window.setTimeout(() => {
+      setActiveStep((current) => Math.min(current + 1, scenario.steps.length - 1));
+    }, 950);
+
+    return () => window.clearTimeout(stepTimer);
+  }, [activeStep, isRunning, scenario.steps.length]);
+
+  const runPlaybook = () => {
+    setActiveStep(0);
+    setIsRunning(true);
+  };
+
   return (
     <div id="slide-3" className="relative min-h-[100dvh] w-full snap-start flex flex-col items-center justify-center p-6 sm:p-12 overflow-hidden bg-slate-950">
       <div className="absolute right-0 top-1/4 w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[100px] mix-blend-screen" />
+      <div className="absolute left-[-10%] bottom-[-20%] w-[50vw] h-[50vw] rounded-full bg-emerald-600/10 blur-[120px]" />
       
-      <div className="relative z-10 max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 w-full pt-16 md:pt-0">
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] items-center gap-10 w-full pt-16 md:pt-0">
         <motion.div 
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -40 }}
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 0.8, ease: easeOutExpo }}
-          className="flex-1"
+          className="w-full"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6">
-            <Network size={16} /> Intelligent Fabric
+            <Code2 size={16} /> AI-feeling, code-driven
           </div>
           <h2 className="text-4xl sm:text-5xl font-display font-bold text-white mb-6">
-            AI-Ready Architecture
+            Let people run the idea.
           </h2>
           <p className="text-xl text-slate-300 mb-6 font-light leading-relaxed">
-            Your customized data lake becomes the native grounding truth for Large Language Models. 
+            The site now behaves like an operator console: choose a messy business problem, press run, and watch the code playbook assemble understandable work artifacts.
           </p>
           <p className="text-lg text-slate-400">
-            Turn 20 years of PDFs, operational logs, and spreadsheets into a conversational oracle. Stop searching for answers and start having dialogues with your historical intelligence.
+            This is the pre-AI layer most companies skipped. Before model compute, you need connectors, schemas, file discipline, permissions, and repeatable scripts that make the answer traceable.
           </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-8">
+            {["Connect", "Transform", "Deliver"].map((item, index) => (
+              <div key={item} className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">0{index + 1}</div>
+                <div className="text-white font-semibold">{item}</div>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         <motion.div 
@@ -426,15 +530,102 @@ const Slide2_5 = () => {
           exit={{ opacity: 0, scale: 0.9 }}
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 0.9, delay: 0.2, ease: easeOutExpo }}
-          className="flex-1 w-full max-w-md relative"
+          className="w-full relative"
         >
-          <div className="aspect-square rounded-full border border-slate-800 flex items-center justify-center relative bg-slate-900/50 backdrop-blur-3xl p-8">
-            <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-[spin_10s_linear_infinite]" style={{ borderStyle: 'dashed' }} />
-            <div className="absolute inset-4 rounded-full border border-indigo-500/20 animate-pulse" />
-            <div className="text-center z-10 px-4">
-               <Cpu size={64} className="text-blue-400 mx-auto mb-6" />
-               <h3 className="text-2xl font-display font-medium text-white mb-3">Grounding Engine</h3>
-               <p className="text-slate-400 text-sm">Continuously learning from your proprietary data lakes in real-time. Native API integration.</p>
+          <div className="bg-slate-900/80 border border-slate-700/60 rounded-3xl shadow-2xl shadow-black/40 overflow-hidden backdrop-blur-xl">
+            <div className="flex items-center justify-between gap-4 border-b border-slate-800 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <span className="w-3 h-3 rounded-full bg-rose-500" />
+                  <span className="w-3 h-3 rounded-full bg-amber-500" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                </div>
+                <div className="text-sm text-slate-400 font-mono">rjec-operator.playbook</div>
+              </div>
+              <div className={`hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold ${scenario.tone}`}>
+                <Terminal size={13} /> deterministic run
+              </div>
+            </div>
+
+            <div className={`p-5 sm:p-6 bg-gradient-to-br ${scenario.gradient}`}>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
+                {scenarios.map((option, index) => (
+                  <button
+                    key={option.label}
+                    onClick={() => setActiveScenario(index)}
+                    className={`text-left rounded-2xl border p-3 transition-all ${activeScenario === index ? option.tone + ' shadow-lg shadow-black/20' : 'bg-slate-950/40 border-slate-700 text-slate-400 hover:text-white hover:border-slate-500'}`}
+                  >
+                    <span className="block text-xs uppercase tracking-widest mb-1 opacity-70">Playbook</span>
+                    <span className="font-semibold">{option.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="bg-slate-950/70 border border-slate-700/70 rounded-2xl p-4 mb-5">
+                <div className="flex items-start gap-3">
+                  <Code2 className="text-blue-300 mt-1 shrink-0" size={20} />
+                  <div>
+                    <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Prompt</div>
+                    <p className="text-slate-200 leading-relaxed">{scenario.prompt}</p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={runPlaybook}
+                className="group w-full rounded-2xl bg-white text-slate-950 font-display font-bold py-4 flex items-center justify-center gap-3 hover:scale-[1.01] active:scale-[0.99] transition-transform"
+              >
+                <Play size={18} fill="currentColor" className={isRunning ? "animate-pulse" : "group-hover:scale-110 transition-transform"} />
+                {isRunning ? "Running code playbook..." : "Run playbook"}
+              </button>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5">
+                <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-4">
+                    <GitBranch size={16} className="text-cyan-300" /> Work trace
+                  </div>
+                  <div className="space-y-3">
+                    {scenario.steps.map((step, index) => {
+                      const isDone = index <= activeStep;
+                      return (
+                        <div key={step} className="flex items-start gap-3">
+                          <div className={`mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${isDone ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'border-slate-700 text-slate-600'}`}>
+                            {isDone ? <Check size={13} strokeWidth={4} /> : <span className="w-1.5 h-1.5 rounded-full bg-current" />}
+                          </div>
+                          <span className={isDone ? "text-slate-100" : "text-slate-500"}>{step}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="bg-black/70 border border-slate-800 rounded-2xl p-4 font-mono text-xs text-slate-300 overflow-hidden">
+                  <div className="flex items-center gap-2 text-slate-500 uppercase tracking-widest font-sans font-bold mb-3">
+                    <Terminal size={14} /> Script
+                  </div>
+                  <div className="space-y-2">
+                    {scenario.code.map((line, index) => (
+                      <div key={line} className={index <= activeStep ? "text-emerald-300" : "text-slate-600"}>
+                        <span className="text-slate-600 mr-2">$</span>{line}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
+                  <FileCheck2 size={17} className="text-emerald-300" /> Generated artifacts
+                </div>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {scenario.artifacts.map((artifact, index) => (
+                    <span key={artifact} className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm ${index <= activeStep - 1 ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-100' : 'border-slate-700 bg-slate-900/70 text-slate-500'}`}>
+                      <ListChecks size={14} /> {artifact}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-sm text-slate-400">{scenario.outcome}</p>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -462,7 +653,7 @@ const SlideEmailIsDead = () => {
           </div>
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold text-white mb-6">Email is Dead. <span className="text-slate-500">Stop using it for work.</span></h2>
           <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
-            Inbox-based task management leads to delays, lost files, and severe security risks. We replace it with an AI-driven collaboration layer orchestrating both Microsoft and Google.
+            Inbox-based task management leads to delays, lost files, and severe security risks. Replace it with a code-driven collaboration layer that orchestrates both Microsoft and Google.
           </p>
         </motion.div>
 
@@ -486,7 +677,7 @@ const SlideEmailIsDead = () => {
             </ul>
           </motion.div>
 
-          {/* The AI OS */}
+          {/* The Operator OS */}
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -497,10 +688,10 @@ const SlideEmailIsDead = () => {
           >
             <div className="absolute top-0 right-0 p-8 opacity-10"><Network size={120} /></div>
             <h3 className="text-2xl font-display font-semibold text-purple-300 mb-6 flex items-center gap-3 border-b border-purple-500/30 pb-4 relative z-10">
-              <CheckCircle size={24} /> The Unified AI Engine
+              <CheckCircle size={24} /> The Unified Operator Engine
             </h3>
             <ul className="space-y-5 text-slate-300 relative z-10">
-              <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Ask, Don't Search:</strong> Ask your AI for an update; it directly queries MSFT and GCP securely.</div></li>
+              <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Ask, Don't Search:</strong> Ask for an update; the playbook queries MSFT and GCP securely with source links.</div></li>
               <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Real-Time Sync:</strong> Shared docs and active collaboration replacing endless threads.</div></li>
               <li className="flex items-start gap-4"><CheckCircle className="text-purple-400 mt-1 shrink-0" size={20} /> <div><strong className="text-white">Zero Attachments:</strong> Unified, strictly-governed links backed by Microsoft 365 compliance.</div></li>
             </ul>
@@ -527,7 +718,7 @@ const SlideWorkflows = () => {
         >
           <h2 className="text-3xl sm:text-5xl font-display font-bold text-white mb-6">Build Your Own Custom ERP</h2>
           <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
-            Why rent generic software schemas? We teach your team to map out bespoke workflows where AI routes data intelligently between platforms.
+            Why rent generic software schemas? Map the exact work your team already does, then let code playbooks route data intelligently between platforms.
           </p>
         </motion.div>
 
@@ -538,7 +729,7 @@ const SlideWorkflows = () => {
           >
             <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center mb-4"><Briefcase size={24} /></div>
             <h3 className="text-xl font-bold text-white mb-2">Client Management</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">AI structures onboarding in Microsoft, while collaborative execution happens live in Google Docs with shared visibility.</p>
+            <p className="text-sm text-slate-400 leading-relaxed">Code structures onboarding in Microsoft, while collaborative execution happens live in Google Docs with shared visibility.</p>
           </motion.div>
           
           <motion.div 
@@ -547,7 +738,7 @@ const SlideWorkflows = () => {
           >
             <div className="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mb-4"><FlaskConical size={24} /></div>
             <h3 className="text-xl font-bold text-white mb-2">Operations & Labs</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Automated status tracking. No emails asking for updates. AI fetches the status from standard Sheets and pings Teams automatically.</p>
+            <p className="text-sm text-slate-400 leading-relaxed">Automated status tracking. No emails asking for updates. Playbooks fetch status from standard Sheets and ping Teams automatically.</p>
           </motion.div>
           
           <motion.div 
@@ -556,7 +747,7 @@ const SlideWorkflows = () => {
           >
             <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mb-4"><DollarSign size={24} /></div>
             <h3 className="text-xl font-bold text-white mb-2">Invoicing & Finance</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Invoices generated automatically via AI scraping project milestones. Securely stored in a SharePoint vault, linked for payment.</p>
+            <p className="text-sm text-slate-400 leading-relaxed">Invoices generated from milestone rules and source files. Securely stored in a SharePoint vault, linked for payment.</p>
           </motion.div>
           
           <motion.div 
@@ -565,7 +756,7 @@ const SlideWorkflows = () => {
           >
             <div className="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center mb-4"><BarChart3 size={24} /></div>
             <h3 className="text-xl font-bold text-white mb-2">Auto-Reporting</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Stop building slide decks manually. AI queries both MS and Google datasets to generate weekly executive summaries instantly.</p>
+            <p className="text-sm text-slate-400 leading-relaxed">Stop building slide decks manually. Code queries both MS and Google datasets to generate weekly executive summaries with source links.</p>
           </motion.div>
         </div>
       </div>
@@ -612,7 +803,7 @@ const Slide3 = () => {
           transition={{ duration: 0.7, delay: 0.2, ease: easeOutExpo }}
           className="text-xl sm:text-2xl text-slate-300 font-medium mb-12 max-w-2xl px-4"
         >
-          When you own the lake, you own the insights. No external data scraping. Complete governance and privacy.
+          When you own the lake, you own the work trace. No external data scraping. Complete governance, permissions, and privacy.
         </motion.p>
 
         <div className="flex flex-wrap justify-center gap-4">
@@ -634,7 +825,7 @@ const Slide3 = () => {
             transition={{ duration: 0.5, delay: 0.4, ease: easeOutExpo }}
             className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full text-slate-200"
           >
-            <Cpu size={18} className="text-blue-400" /> Private Compute Enclaves
+            <Cpu size={18} className="text-blue-400" /> Private Workflow Runners
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -699,7 +890,7 @@ const SlideCostOfBloat = () => {
             <div className="space-y-4 text-slate-300 font-medium relative z-10">
               <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Shield size={18} className="text-blue-400" /> Framework (M365)</span> <CheckCircle size={18} className="text-emerald-400" /></div>
               <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Zap size={18} className="text-rose-400" /> Speed (Google)</span> <CheckCircle size={18} className="text-emerald-400" /></div>
-              <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Cpu size={18} className="text-purple-400" /> AI Execution Layer</span> <CheckCircle size={18} className="text-emerald-400" /></div>
+              <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/10"><span className="flex items-center gap-3 text-white"><Cpu size={18} className="text-purple-400" /> Code Execution Layer</span> <CheckCircle size={18} className="text-emerald-400" /></div>
               
               <div className="mt-6 p-4 bg-emerald-500/10 rounded-xl text-sm border border-emerald-500/20 text-emerald-100">
                 Replaces chat tools, standalone video systems, external task managers, and disparate storage entirely.
@@ -753,7 +944,7 @@ const Slide4 = () => {
             Start Your Sandbox
           </h2>
           <p className="text-slate-400 text-lg sm:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed">
-            Ready to stitch together massive, dispersed data silos into a singular, conversational intelligence engine? The roadmap to data sovereignty begins here.
+            Ready to stitch together dispersed data silos into an operator-guided workflow engine? The roadmap to useful, understandable automation begins here.
           </p>
           
           <button className="group relative w-full sm:w-auto inline-flex items-center justify-center px-10 py-5 font-semibold text-white transition-all duration-200 ease-in-out bg-slate-900 rounded-full hover:scale-105 active:scale-95 outline-none overflow-hidden">
